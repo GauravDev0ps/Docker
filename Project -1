@@ -1,0 +1,238 @@
+Aim : 
+
+1. We will install apache web server on an ec2 install in AWS free tier account. 
+2. We will also host a dummy website on same apache2 webserver.
+3. All of this will happen in the most light weighted manner using docker.
+
+
+========================================================================================================================================================================
+Procedure :
+
+
+1. Since, we have already installed docker on our ec2 instance using the Install Docker file. We will directly jump to writing a docker file.
+2. Before, that lets check if docker is properly install docker using below two commands
+
+which docker ------------------------------> will tell where this app is installed
+sudo systemctl status docker --------------> will tell the status of docker service
+
+3. Now, lets move towards writing our first docker file.
+
+sudo nano Dockerfile ---------------------> will create a text editor with a file named Dockerfile (It is a standard file and must not be changed)
+
+4. Write following code in Dockerfile
+
+FROM ubuntu:latest -----------------------> will use a ubuntu base image with tag "latest" from docker hub ( docker repository for images )
+
+RUN apt-get update -y --------------------> will update fetch all the latest package information from configure resources
+
+RUN apt-get install apache2 -y ----------> will install apache2 web server on ubuntu machine , -y tag will assist in non interative installation
+
+COPY . /var/www/html --------------------> will copy all the files (use dummy files provided in repo) from current directory to /var/www/html directory in container
+
+EXPOSE 80 -------------------------------> will expose port 80 of the container, so we can access the website
+
+CMD ["apache2ctl" , "-D" , "FOREGROUND"] -> will run the apache server in foreground
+
+" Now ,just save and exit from the file."
+
+
+5. Awesome, we are half way there. great job !! .
+
+6. Now, come back to the ec2 cli and run below command to create a docker image from Dockerfile we just created. As docker file is just a blueprint of how our docker image would be.
+
+sudo docker build -t webserver1 . -----> will build a docker image using file with tag : webserver1 . Since Dockerfile is in same directory hence, we use "." else use the absolute path.
+
+7. Now, lets check if the image got built or not by using below command.
+
+sudo docker images -------------------> will show all the local images
+
+8. Now, run below command to deploy a container with our "webserver" image
+
+sudo docker run -d --name webserver -p 80:80 webserver --> it will run a container "webserver" in detached mode (-d tag) with port 80 mapped with the port 80 of ec2 instance (-p tag)
+
+9. Since we have to access the container using ec2 instance's ip address, we have to map the port to instance.
+
+10. And we are done, try to open the instance's public ip address on port 80. You will be able to see our dummy website.
+
+
+============================================================================================================================================================================
+
+Result : We are able to render the website using instance's ip address on port 80.
+
+
+
+
+==========================================================================================================================================================================
+
+Dummy website files:
+
+Index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> IIT Patna Student Portal </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1> IIT Patna : Student Portal </h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <img src="https://imgs.search.brave.com/W0Qr4wJW7jeHMm08MLmSb_q5lX6gc_jm-1X0nazHhIk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuY>      <h2> Become an IIT Patna Alumunus </h2>
+      <p> Aspirations in India often carry the weight of generations. For countless students across the country, the hallowed halls >
+
+
+The allure of becoming an IIT Patna alumnus is multifaceted. It starts with the rigorous education that pushes boundaries and foster>
+
+The IIT Patna alumni network is a testament to the institute's enduring impact. From CEOs of multinational corporations to leading s>
+
+But the benefits of becoming an IIT Patna alumnus extend beyond professional success. It's about belonging to a community of excelle>
+
+For many, the dream of becoming an IIT Patna alumnus starts young. It's whispered in classrooms, fueled by stories of past successes>
+
+IIT Patna isn't just an academic institution; it's a symbol of hope, opportunity, and the potential for greatness that lies within e>    </section>
+    <section class="about">
+      <h3> Library </h3>
+      <p> Unveiling a World of Knowledge: IIT Patna Library - A Student's Gateway to Success
+For students navigating the demanding academic journey at IIT Patna, the library serves as an invaluable sanctuary and a potent fuel>
+
+A Universe of Knowledge at Your Fingertips:
+
+Extensive Collection: Immerse yourself in a vast ocean of knowledge, with access to over 1,70,000 physical books and countless e-boo>Specialized Resources: Dive deeper into your field with departmental libraries, housing specialized collections relevant to your spe>Digital Convenience: Embrace the ease of access with the e-library portal, offering a wealth of e-resources available 24/7, even bey>Beyond Books: A Supportive Learning Ecosystem:
+
+Modern Facilities: Study in a conducive environment with comfortable seating, dedicated study spaces, and access to computers and pr>E
+Workshops and Training: Enhance your research skills and explore new technologies through workshops and training sessions conducted >Access Tailored to Your Needs:
+
+Borrowing Privileges: Take advantage of the generous borrowing privileges, allowing you to borrow books for extended periods and acc>Interlibrary Loan: Need a resource not available in the library? Utilize the interlibrary loan service to access materials from othe>Open Access Resources: Explore a vast collection of open-access resources curated by the library, providing free access to scholarly>IIT Patna's library is more than just a place to borrow books; it's a vibrant community of learners and a launchpad for academic suc>      <img src=" https://imgs.search.brave.com/tlZxrjvH6ogf2ZDPZLgwpbdAhu60pB4OaFNULT795Ps/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9jLm5k/dHZp>    </section>
+    <section class="services">
+      <h3> Courses Offered </h3>
+      <ul>
+        <li>EMTECH - CLOUD COMPUTING </li>
+        <li>EMTECH - BIG DATA</li>
+        <li>EMTECH - BLOCKCHAIN</li>
+        <li>EMTECH - SOFTWARE ENGINEERING</li>
+        <li>EMTECH - AI & ML</li>
+      </ul>
+    </section>
+    <section class="contact">
+      <h3>Contact Us</h3>
+      <p> General Inquiries:
+
+Website: The official IIT Patna website (https://www.iitp.ac.in/) serves as a central hub for information, including contact details>Email: For general inquiries, you can send an email to https://www.iitp.ac.in/index.php/contact.
+Phone: The main telephone number for the institute is +91-6115-233-686.
+Social Media: Follow IIT Patna on social media platforms like Facebook (https://www.facebook.com/iitp.ac.in/), Twitter (https://twit>
+Specific Departments:
+
+Academics: Visit the Academic Office website (https://academics.iitp.ac.in/) for contact information of academic departments, deans,>Admissions: For admission-related queries, contact the Admissions Office at https://www.iitp.ac.in/ or email [email address removed].Placement: Career guidance and placement opportunities are handled by the Training & Placement Cell (https://www.iitp.ac.in/placemen>Research: The Research & Development Office (https://www.iitp.ac.in/) provides information on research opportunities, grants, and co>Additional Resources:
+
+Communication Directory: A comprehensive directory of faculty, staff, and departments with contact information is available on the w>Feedback: Share your feedback or suggestions with the institute through the online feedback form (https://www.iitp.ac.in/)..</p>
+      <form action="#">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message"></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+      <img src=" https://imgs.search.brave.com/tlZxrjvH6ogf2ZDPZLgwpbdAhu60pB4OaFNULT795Ps/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9jLm5k/dHZp>    <p>&copy; Maintained and Developed by Gaurav Sharma, All rights reserved </p>
+  </footer>
+</body>
+</html>
+
+
+
+
+=============================================================================================================================================================
+
+
+Style.css
+
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+header h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+nav a {
+  color: #000;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: #333;
+}
+
+.hero {
+  background-image: url("hero-image.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 50px;
+  text-align: center;
+  color: #fff;
+}
+
+.hero h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.about {
+  padding: 30px;
+}
+
+.about h3 {
+  margin-bottom: 20px;
+}
+
+.services {
+  padding: 30px;
+}
+
+.contact {
+  padding: 30px;
+}
+
+form {
+  margin: 20px 0;
+}
+
+label {
+  display
