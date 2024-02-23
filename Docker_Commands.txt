@@ -1,0 +1,43 @@
+General Commands:
+
+docker version: Displays Docker version information.
+docker info: Shows information about the Docker daemon and environment.
+docker search [term]: Searches for Docker images on Docker Hub.
+docker pull [image]: Downloads an image from a registry.
+docker push [image]: Pushes an image to a registry.
+docker images: Lists all images locally available.
+docker rmi [image]: Removes an image.
+Image Management:
+
+docker build [context] [tag]: Builds an image from a Dockerfile.
+docker inspect [image]: Displays detailed information about an image.
+docker history [image]: Shows the history of changes for an image.
+docker tag [source_image] [target_image]: Tags an existing image with a new name.
+Container Management:
+
+docker run [options] [image] [command]: Creates and runs a container from an image.
+docker ps: Lists all running containers.
+docker stop [container]: Stops a running container.
+docker start [container]: Starts a stopped container.
+docker restart [container]: Restarts a running container.
+docker kill [container]: Kills a running container.
+docker logs [container]: Shows the logs of a container.
+docker exec [container] [command]: Executes a command in a running container.
+Volume Management:
+
+docker volume create [name]: Creates a new volume.
+docker volume inspect [volume]: Shows information about a volume.
+docker volume ls: Lists all volumes.
+docker volume rm [volume]: Removes a volume.
+Network Management:
+
+docker network create [name]: Creates a new network.
+docker network inspect [network]: Shows information about a network.
+docker network ls: Lists all networks.
+docker network rm [network]: Removes a network.
+Additional Commands:
+
+docker login: Logs in to a Docker registry.
+docker logout: Logs out of a Docker registry.
+docker compose: Manages multi-container applications with Docker Compose.
+docker swarm: Manages Docker Swarm clusters.
